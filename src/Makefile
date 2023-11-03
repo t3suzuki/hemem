@@ -2,9 +2,9 @@ CC = gcc
 CFLAGS = -g -Wall -O3 -fPIC
 #CFLAGS = -g3 -Wall -O0 -fPIC
 LDFLAGS = -shared
-INCLUDES = -I../linux/usr/include/
+INCLUDES = -I../linux/usr/include/ -I../syscall_intercept/include
 LIBS = -lm -lpthread
-HEMEM_LIBS = $(LIBS) -ldl -lsyscall_intercept -L../Hoard/src -lhoard
+HEMEM_LIBS = $(LIBS) -ldl -L../syscall_intercept/build -lsyscall_intercept -L../Hoard/src -lhoard
 
 default: libhemem.so
 
@@ -26,7 +26,7 @@ libhemem-lru-swap.so: policies/hemem-lru-swap.o policies/lru_swap.o timer.o inte
 
 hemem.o: hemem.c hemem.h pebs.h interpose.h fifo.h spsc-ring.h
 	$(CC) $(CFLAGS) $(INCLUDES) -D ALLOC_HEMEM -c hemem.c -o hemem.o
-	
+
 policies/hemem-lru.o: hemem.c hemem.h policies/lru.h interpose.h policies/paging.h fifo.h spsc-ring.h
 	$(CC) $(CFLAGS) $(INCLUDES) -D ALLOC_LRU -c hemem.c -o policies/hemem-lru.o
 
